@@ -87,7 +87,7 @@ def prepare_datasets(training_config: TrainingConfig) -> Tuple[List[TrainingTask
 
 def print_dataset_samples(dataset: List[TrainingTask], n: int = 3):
     """
-    Pretty print datasetles.
+    Pretty print dataset samples.
     
     Args:
         dataset: Dataset to sample from
