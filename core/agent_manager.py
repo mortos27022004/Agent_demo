@@ -18,7 +18,7 @@ from agno.tools.function import Function
 from agno.tracing import setup_tracing
 
 from .config import AgentConfig
-from .tools import sum_1_to_n, calculator
+from .tools import sum_1_to_n, calculator, get_area_of_circle, get_area_of_rectangle
 
 
 logger = logging.getLogger(__name__)
@@ -91,7 +91,9 @@ class AgnoAgentManager:
             ),
             tools=[
                 Function.from_callable(sum_1_to_n),
-                Function.from_callable(calculator)
+                Function.from_callable(calculator),
+                Function.from_callable(get_area_of_circle),
+                Function.from_callable(get_area_of_rectangle)
             ],
             instructions=instructions,
             db=self.db,

@@ -15,6 +15,7 @@ try:
     from agentlightning.algorithm import APO
     from agentlightning.trainer import Trainer
     from agentlightning.adapter import TraceToMessages
+    from agentlightning import LightningStoreClient
     AGENT_LIGHTNING_AVAILABLE = True
 except ImportError:
     AGENT_LIGHTNING_AVAILABLE = False
@@ -22,6 +23,7 @@ except ImportError:
     APO = None
     Trainer = None
     TraceToMessages = None
+    LightningStoreClient = None
 
 from agno.agent import Agent
 from agno.models.openai import OpenAIChat
@@ -29,10 +31,9 @@ from agno.tools.function import Function
 from agno.db.json import JsonDb
 
 from core.config import AgentConfig
-from core.tools import sum_1_to_n, calculator
-from .dataset import MathTask
+from ..data.dataset import TrainingTask
 from .grader import calculate_reward, extract_answer
-from .config import TrainingConfig
+from ..config import TrainingConfig
 
 
 logger = logging.getLogger(__name__)
@@ -61,15 +62,15 @@ def create_agent_with_prompt(
         if line.strip()
     ]
     
+    # Get tools from config if available, otherwise use empty list
+    tools = getattr(config, 'tools', [])
+    
     agent = Agent(
         model=OpenAIChat(
             id=config.model_id,
             api_key=config.openai_api_key
         ),
-        tools=[
-            Function.from_callable(sum_1_to_n),
-            Function.from_callable(calculator)
-        ],
+        tools=tools,
         instructions=instructions,
         db=db,
         user_id=config.user_id,
@@ -85,7 +86,7 @@ def create_agent_with_prompt(
 if AGENT_LIGHTNING_AVAILABLE:
     @agl.rollout
     def agno_agent_rollout(
-        task: MathTask,
+        task: TrainingTask,
         prompt_template: agl.PromptTemplate,
         config: AgentConfig = None,
         db: JsonDb = None,
@@ -98,7 +99,7 @@ if AGENT_LIGHTNING_AVAILABLE:
         Agent Lightning training.
         
         Args:
-            task: Math task to solve
+            task: Training task to solve
             prompt_template: Prompt template from Agent Lightning
             config: Agent configuration
             db: Database instance
@@ -158,7 +159,8 @@ def setup_trainer(
     n_runners: int = 8,
     config: Optional[AgentConfig] = None,
     db: Optional[JsonDb] = None,
-    training_config: Optional[TrainingConfig] = None
+    training_config: Optional[TrainingConfig] = None,
+    store_url: Optional[str] = None
 ) -> Optional[object]:
     """
     Setup Agent Lightning trainer.
@@ -167,6 +169,7 @@ def setup_trainer(
         initial_prompt: Initial prompt template
         algorithm_type: Algorithm type (apo, sft, rl)
         n_runners: Number of parallel runners
+        store_url: External store URL for debugging (e.g., "http://localhost:4747")
         
     Returns:
         Trainer instance or None if Agent Lightning unavailable
@@ -185,7 +188,12 @@ def setup_trainer(
     
     # Choose algorithm
     if algorithm_type == "apo":
-        algo = APO(async_openai_client=async_client)
+        # Override default invalid models (gpt-5-mini) with valid ones
+        algo = APO(
+            async_openai_client=async_client,
+            gradient_model="gpt-4o-mini",
+            apply_edit_model="gpt-4o-mini"
+        )
     elif algorithm_type == "sft":
         # SFT not yet supported, fallback to APO
         logger.warning(f"SFT not yet implemented, using APO")
@@ -198,8 +206,14 @@ def setup_trainer(
         logger.warning(f"Unknown algorithm: {algorithm_type}, using APO")
         algo = APO(async_openai_client=async_client)
     
+    # Create PromptTemplate resource for APO algorithm
+    prompt_resource = agl.PromptTemplate(
+        template=initial_prompt,
+        engine="f-string"
+    )
+    
     # Resources to be injected into rollout
-    resources = {"prompt_template": initial_prompt}
+    resources = {"prompt_template": prompt_resource}
     if config:
         resources["config"] = config
     if db:
@@ -207,12 +221,65 @@ def setup_trainer(
     if training_config:
         resources["training_config"] = training_config
 
+    # Connect to external store if URL provided
+    store = None
+    if store_url:
+        try:
+            store = LightningStoreClient(store_url)
+            logger.info(f"✅ Connected to external store: {store_url}")
+        except Exception as e:
+            logger.warning(f"⚠️ Could not connect to external store: {e}")
+            store = None
+
+    # Implement a hook to save EVERY prompt version as it's being tested
+    class PromptLoggingHook(agl.Hook):
+        """Hook to save every candidate prompt used in rollouts to JSON in real-time."""
+        
+        def __init__(self):
+            super().__init__()
+            from ..utils.prompt_manager import PromptManager
+            self.pm = PromptManager()
+            self._saved_hashes = set()
+
+        async def on_rollout_start(self, *, agent, runner, rollout):
+            """Called before each rollout attempt."""
+            try:
+                # Extract prompt template from resources for this rollout
+                store = runner.store
+                if rollout.resources_id:
+                    res = await store.get_resources(rollout.resources_id)
+                    if res and 'prompt_template' in res:
+                        prompt_text = str(res['prompt_template'])
+                        
+                        # Only save if we haven't saved this exact text recently 
+                        # to avoid spamming the JSON during the 16 tasks per prompt batch
+                        prompt_hash = hash(prompt_text)
+                        if prompt_hash not in self._saved_hashes:
+                            self.pm.save_prompt(
+                                prompt_text=prompt_text,
+                                training_reward=0.0, # Dummy, will be updated by best_prompt
+                                iteration=0,
+                                metadata={
+                                    "rollout_id": rollout.rollout_id,
+                                    "resource_id": rollout.resources_id,
+                                    "mode": rollout.mode,
+                                    "status": "candidate"
+                                },
+                                set_active=False
+                            )
+                            self._saved_hashes.add(prompt_hash)
+            except Exception as e:
+                # Hooks should never crash training
+                logger.debug(f"PromptLoggingHook error: {e}")
+
     # Create trainer
     trainer = Trainer(
         algorithm=algo,
         n_runners=n_runners,
         initial_resources=resources,
         adapter=TraceToMessages(),
+        store=store,  # Use external store if available
+        hooks=[PromptLoggingHook()]
     )
     
     logger.info(f"✅ Trainer created with {algorithm_type} algorithm")

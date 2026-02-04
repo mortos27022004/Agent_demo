@@ -1,0 +1,95 @@
+{
+  "version": "1.0",
+  "prompts": [
+    {
+      "id": "40369171-2e39-4655-9f7a-c986d080c180",
+      "prompt_text": "resource_type='prompt_template' template='You are a helpful math assistant.\\nSolve math problems step by step.\\nWhen given a calculation task, use the available tools.\\nAlways show your work and provide the final answer clearly.\\nBe accurate and precise in your calculations.' engine='f-string'",
+      "timestamp": "2026-02-04T16:27:03.091105",
+      "training_reward": 0.0,
+      "iteration": 2,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {
+        "train_size": "N/A",
+        "val_size": "N/A",
+        "n_runners": 8,
+        "task_type": "conversation"
+      }
+    },
+    {
+      "id": "2ea68a9b-693d-4594-a777-57d513853eef",
+      "prompt_text": "resource_type='prompt_template' template='You are a helpful math assistant.\\nSolve math problems step by step.\\nWhen given a calculation task, use the available tools.\\nAlways show your work and provide the final answer clearly.\\nBe accurate and precise in your calculations.' engine='f-string'",
+      "timestamp": "2026-02-04T16:49:10.584594",
+      "training_reward": 0.0,
+      "iteration": 2,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {
+        "train_size": "N/A",
+        "val_size": "N/A",
+        "n_runners": 8,
+        "task_type": "conversation"
+      }
+    },
+    {
+      "id": "c7c15b60-5dac-4beb-8b0c-9907ffd4a177",
+      "prompt_text": "resource_type='prompt_template' template='You are a helpful math assistant.\\nSolve math problems step by step.\\nWhen given a calculation task, use the available tools.\\nAlways show your work and provide the final answer clearly.\\nBe accurate and precise in your calculations.' engine='f-string'",
+      "timestamp": "2026-02-04T16:50:21.689329",
+      "training_reward": -Infinity,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {
+        "train_size": "N/A",
+        "val_size": "N/A",
+        "n_runners": 8,
+        "task_type": "conversation"
+      }
+    },
+    {
+      "id": "c1b5666d-0588-4a36-9dc9-9b2de61cd09c",
+      "prompt_text": "resource_type='prompt_template' template='You are a helpful math assistant.\\nSolve math problems step by step.\\nWhen given a calculation task, use the available tools.\\nAlways show your work and provide the final answer clearly.\\nBe accurate and precise in your calculations.' engine='f-string'",
+      "timestamp": "2026-02-04T16:51:57.612261",
+      "training_reward": -Infinity,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {
+        "train_size": "N/A",
+        "val_size": "N/A",
+        "n_runners": 8,
+        "task_type": "conversation"
+      }
+    },
+    {
+      "id": "274388bd-c8cf-4a2c-b647-330fe8c31d72",
+      "prompt_text": "resource_type='prompt_template' template='You are a helpful math assistant.\\nSolve math problems step by step.\\nWhen given a calculation task, use the available tools.\\nAlways show your work and provide the final answer clearly.\\nBe accurate and precise in your calculations.' engine='f-string'",
+      "timestamp": "2026-02-04T17:19:30.057199",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {
+        "train_size": "N/A",
+        "val_size": "N/A",
+        "n_runners": 8,
+        "task_type": "conversation"
+      }
+    },
+    {
+      "id": "6a7dcabe-3f8f-4bea-975a-e5425d7f80d1",
+      "prompt_text": "resource_type='prompt_template' template='You are a helpful math assistant.\\nSolve math problems step by step.\\nWhen given a calculation task, use the available tools.\\nAlways show your work and provide the final answer clearly.\\nBe accurate and precise in your calculations.' engine='f-string'",
+      "timestamp": "2026-02-04T17:25:29.283316",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": true,
+      "metadata": {
+        "train_size": "N/A",
+        "val_size": "N/A",
+        "n_runners": 8,
+        "task_type": "conversation"
+      }
+    }
+  ]
+}

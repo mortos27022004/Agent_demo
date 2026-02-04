@@ -22,22 +22,21 @@ class TrainingConfig:
     n_runners: int = 8
     max_iterations: int = 10
     
-    # === Training Dataset ===
-    train_size: int = 20
-    val_size: int = 10
-    
     # === Algorithm Settings ===
     algorithm: Literal["apo", "sft", "rl"] = "apo"
     learning_rate: float = 0.001
     
     # === Reward Settings ===
-    use_llm_grader: bool = False
+    use_llm_grader: bool = True
     reward_tolerance: float = 0.1  # 10% tolerance for partial credit
     
     # === Task Settings ===
-    task_type: Literal["math", "conversation", "custom"] = "math"
-    min_task_value: int = 1
-    max_task_value: int = 100
+    task_type: Literal["math", "conversation", "custom"] = "conversation"
+    
+    # === Real User Data Settings ===
+    use_real_data: bool = True
+    user_data_db_path: str = "agno_memory.db"
+    max_real_data_age_days: int = 30  # Only use recent data
 
 
 # Default configuration instance

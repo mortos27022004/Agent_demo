@@ -1,273 +1,110 @@
 #!/usr/bin/env python
-"""
-Train Agno Agent using Agent Lightning.
+"""Train Agno Agent using Agent Lightning.
 
-Usage:
-    python train_agent.py                 # Train with default settings
-    python train_agent.py --dry-run       # Test without actual training
-    python train_agent.py --iterations 20 # Custom iterations
+This is the main orchestrator that coordinates the training workflow.
 """
 
-import argparse
 import logging
-import sys
-from pathlib import Path
-
+import os
 from dotenv import load_dotenv
 
-# Import our modules
-from core.config import AgentConfig
-from .config import TrainingConfig
-from .dataset import generate_math_dataset
-from .otlp import setup_otlp_exporter
-from .rollout import setup_trainer, agno_agent_rollout, get_initial_prompt, AGENT_LIGHTNING_AVAILABLE
-from agno.db.json import JsonDb
+from pathlib import Path
+from .setup import initialize_training
+from .data.data_preparation import prepare_datasets
+from .engine.training_executor import run_training
+from .utils.result_saver import save_training_results
 
+# Create logs directory
+log_dir = Path(__file__).parent / "logs"
+log_dir.mkdir(exist_ok=True)
 
-# Setup logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler(log_dir / "training.log", mode='a')
+    ]
 )
 logger = logging.getLogger(__name__)
 
 
-def parse_args():
-    """Parse command line arguments."""
-    parser = argparse.ArgumentParser(
-        description="Train Agno Agent with Agent Lightning"
-    )
-    parser.add_argument(
-        '--dry-run',
-        action='store_true',
-        help='Test setup without running training'
-    )
-    parser.add_argument(
-        '--iterations',
-        type=int,
-        default=10,
-        help='Number of training iterations'
-    )
-    parser.add_argument(
-        '--train-size',
-        type=int,
-        default=20,
-        help='Training dataset size'
-    )
-    parser.add_argument(
-        '--val-size',
-        type=int,
-        default=10,
-        help='Validation dataset size'
-    )
-    parser.add_argument(
-        '--algorithm',
-        choices=['apo', 'sft', 'rl'],
-        default='apo',
-        help='Training algorithm'
-    )
-    return parser.parse_args()
+# Default database path relative to project root
+DEFAULT_DB_PATH = str(Path(__file__).parent.parent / "core" / "agno_memory.db")
 
 
-def main():
-    """Main training entry point."""
-    # Load environment variables
+def main(
+    iterations: int = 1,
+    algorithm: str = "apo",
+    store_url: str = None,
+    dry_run: bool = False,
+    real_data_db: str = DEFAULT_DB_PATH
+):
+    """
+    Simplified training entry point.
+    """
     load_dotenv()
     
-    # Parse arguments
-    args = parse_args()
+    # Troubleshooting support (per user tips)
+    if os.getenv("AGENTOPS_LOG_LEVEL") == "DEBUG":
+        print("🔍 AgentOps Debug Mode Enabled")
     
-    # Check if Agent Lightning is available
-    if not AGENT_LIGHTNING_AVAILABLE:
-        logger.error("❌ Agent Lightning is not installed!")
-        logger.error("   Install with: pip install agentlightning>=0.3.0")
-        sys.exit(1)
-    
-    print("✅ Agent Lightning is available")
-    
-    # Load configurations
-    agent_config = AgentConfig()
-    training_config = TrainingConfig(
-        max_iterations=args.iterations,
-        train_size=args.train_size,
-        val_size=args.val_size,
-        algorithm=args.algorithm
+    if not os.getenv("AGENTOPS_API_KEY"):
+        print("⚠️ Warning: AGENTOPS_API_KEY not found in environment.")
+        print("   If you want to trace training sessions, add it to your .env file.")
+    # 1. Initialize (Dependencies + Config + Infrastructure)
+    agent_config, training_config, db = initialize_training(
+        iterations=iterations,
+        algorithm=algorithm,
+        real_data_db=real_data_db
     )
     
-    print(f"📊 Configuration:")
-    print(f"   - Algorithm: {training_config.algorithm}")
-    print(f"   - Iterations: {training_config.max_iterations}")
-    print(f"   - Train size: {training_config.train_size}")
-    print(f"   - Val size: {training_config.val_size}")
-    print()
+    # 2. Prepare datasets
+    train_dataset, val_dataset = prepare_datasets(training_config)
     
-    # Setup OTLP exporter
-    print("🔧 Setting up OTLP exporter...")
-    otlp_provider = setup_otlp_exporter(
-        endpoint=training_config.otlp_endpoint,
-        service_name=training_config.agent_id
-    )
-    
-    if otlp_provider:
-        print(f"✅ OTLP exporter configured: {training_config.otlp_endpoint}")
-    else:
-        print("⚠️  OTLP exporter not configured (training will continue)")
-    print()
-    
-    # Setup database
-    print("💾 Setting up database...")
-    db_path = Path(__file__).parent / "agno_memory_training.db"
-    db = JsonDb(db_path=str(db_path))
-    print(f"✅ Database: {db_path}")
-    print()
-    
-    # Generate datasets
-    print("📝 Generating datasets...")
-    train_dataset = generate_math_dataset(
-        size=training_config.train_size,
-        min_value=training_config.min_task_value,
-        max_value=training_config.max_task_value,
-        seed=42
-    )
-    val_dataset = generate_math_dataset(
-        size=training_config.val_size,
-        min_value=training_config.min_task_value,
-        max_value=training_config.max_task_value,
-        seed=123  # Different seed for validation
-    )
-    print(f"✅ Generated {len(train_dataset)} training tasks")
-    print(f"✅ Generated {len(val_dataset)} validation tasks")
-    print()
-    
-    # Show sample tasks
-    print("📋 Sample tasks:")
-    for task in train_dataset[:3]:
-        print(f"   - {task['question']} → {task['expected_answer']}")
-    print()
-    
-    if args.dry_run:
-        print("🧪 DRY RUN MODE - Skipping actual training")
-        print("✅ Setup complete! Everything looks good.")
+    if dry_run:
+        print("🧪 DRY RUN MODE - Setup complete!")
         return
+    print (train_dataset)
+    if store_url:
+        # If using external store (dashboard), tell agentlightning NOT to start
+        # its own internal server wrapper for subprocesses. This avoids binding
+        # conflicts and timeout issues.
+        os.environ["AGL_MANAGED_STORE"] = "false"
+        print(f"🔗 Using external store: {store_url}")
     
-    # Get initial prompt
-    initial_prompt = get_initial_prompt()
-    print("📄 Initial prompt template:")
-    for line in initial_prompt.strip().split('\\n'):
-        print(f"   {line}")
-    print()
-    
-    # Setup trainer
-    print(f"🎓 Setting up trainer with {training_config.algorithm.upper()} algorithm...")
-    trainer = setup_trainer(
-        initial_prompt=initial_prompt,
-        algorithm_type=training_config.algorithm,
-        n_runners=training_config.n_runners,
-        config=agent_config,
+    # 3. Create trainer and Execute training
+    trainer, initial_prompt = run_training(
+        training_config=training_config,
+        agent_config=agent_config,
         db=db,
-        training_config=training_config
+        train_dataset=train_dataset,
+        val_dataset=val_dataset,
+        store_url=store_url
     )
     
-    if trainer is None:
-        logger.error("❌ Failed to create trainer")
-        sys.exit(1)
+    # 4. Save results
+    save_training_results(trainer, initial_prompt, training_config)
     
-    print(f"✅ Trainer ready with {training_config.n_runners} parallel runners")
-    print()
-    
-    # Start training
-    print("🔥 Starting training...")
     print("=" * 60)
-    
-    try:
-        trainer.fit(
-            agent=agno_agent_rollout,
-            train_dataset=train_dataset,
-            val_dataset=val_dataset
-        )
-        
-        print()
-        print("=" * 60)
-        print("✅ Training complete!")
-        print(f"📊 Results saved to: {db_path}")
-        
-        # Save best prompt
-        print()
-        print("💾 Saving best prompt...")
-        try:
-            from .prompt_manager import PromptManager
-            
-            # Extract best prompt from trainer
-            # Agent Lightning stores best resources in trainer.best_resources
-            best_prompt = initial_prompt  # Fallback
-            best_reward = 0.0
-            
-            # Try to get best resources from trainer
-            if hasattr(trainer, 'best_resources'):
-                best_resources = trainer.best_resources
-                if best_resources and 'prompt_template' in best_resources:
-                    best_prompt = best_resources['prompt_template']
-                    print(f"✅ Extracted best prompt from trainer.best_resources")
-            
-            # Try alternative: algorithm.best_resources
-            elif hasattr(trainer, 'algorithm') and hasattr(trainer.algorithm, 'best_resources'):
-                best_resources = trainer.algorithm.best_resources
-                if best_resources and 'prompt_template' in best_resources:
-                    best_prompt = best_resources['prompt_template']
-                    print(f"✅ Extracted best prompt from algorithm.best_resources")
-            
-            else:
-                print(f"⚠️  Could not find best_resources, using initial prompt")
-            
-            # Try to get best reward
-            if hasattr(trainer, 'best_reward'):
-                best_reward = trainer.best_reward
-            elif hasattr(trainer, 'algorithm') and hasattr(trainer.algorithm, 'best_reward'):
-                best_reward = trainer.algorithm.best_reward
-            else:
-                # Estimate reward based on whether we improved from initial
-                if best_prompt != initial_prompt:
-                    best_reward = 0.85  # Improved
-                else:
-                    best_reward = 0.60  # No improvement
-                logger.warning(f"Could not extract best reward, using estimate: {best_reward}")
-            
-            # Save to PromptManager
-            pm = PromptManager()
-            record = pm.save_prompt(
-                prompt_text=best_prompt,
-                training_reward=best_reward,
-                iteration=training_config.max_iterations,
-                algorithm=training_config.algorithm,
-                metadata={
-                    "train_size": training_config.train_size,
-                    "val_size": training_config.val_size,
-                    "n_runners": training_config.n_runners,
-                    "task_type": training_config.task_type
-                },
-                set_active=True
-            )
-            
-            print(f"✅ Best prompt saved (ID: {record.id[:8]}...)")
-            print(f"   Reward: {best_reward:.3f}")
-            print(f"   Algorithm: {training_config.algorithm}")
-            
-            # Show prompt preview
-            preview = best_prompt[:100] + "..." if len(best_prompt) > 100 else best_prompt
-            print(f"   Preview: {preview}")
-            
-        except Exception as e:
-            logger.error(f"Failed to save best prompt: {e}", exc_info=True)
-            print(f"⚠️  Warning: Could not save best prompt: {e}")
-            import traceback
-            traceback.print_exc()
-        
-        print("=" * 60)
-        
-    except Exception as e:
-        logger.error(f"❌ Training failed: {e}", exc_info=True)
-        sys.exit(1)
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Agno Agent Training Pipeline")
+    parser.add_argument("--iterations", type=int, default=1, help="Number of training iterations")
+    parser.add_argument("--algorithm", type=str, default="apo", help="Training algorithm (apo, sft, rl)")
+    parser.add_argument("--store-url", type=str, help="Optional external store URL")
+    parser.add_argument("--dry-run", action="store_true", help="Only setup and prepare data without training")
+    parser.add_argument("--real-data-db", type=str, default=DEFAULT_DB_PATH, help="Path to real data database")
+    
+    args = parser.parse_args()
+    
+    main(
+        iterations=args.iterations,
+        algorithm=args.algorithm,
+        store_url=args.store_url,
+        dry_run=args.dry_run,
+        real_data_db=args.real_data_db
+    )
