@@ -6,14 +6,13 @@ import sys
 from typing import List, Tuple
 
 from ..config import TrainingConfig
-from .dataset import TrainingTask
 from .conversation_extractor import extract_all_sessions, filter_successful_interactions, get_recent_sessions
 from .conversation_to_dataset import batch_convert_sessions, convert_to_training_task
 
 logger = logging.getLogger(__name__)
 
 
-def prepare_datasets(training_config: TrainingConfig) -> Tuple[List[TrainingTask], List[TrainingTask]]:
+def prepare_datasets(training_config: TrainingConfig) -> Tuple[List[dict], List[dict]]:
     """
     Prepare training and validation datasets from real user conversations.
     
@@ -85,9 +84,9 @@ def prepare_datasets(training_config: TrainingConfig) -> Tuple[List[TrainingTask
     return train_dataset, val_dataset
 
 
-def print_dataset_samples(dataset: List[TrainingTask], n: int = 3):
+def print_dataset_samples(dataset: List[dict], n: int = 3):
     """
-    Pretty print dataset samples.
+    Pretty print datasetles.
     
     Args:
         dataset: Dataset to sample from
@@ -95,5 +94,5 @@ def print_dataset_samples(dataset: List[TrainingTask], n: int = 3):
     """
     print("\n📋 Sample tasks:")
     for task in dataset[:n]:
-        print(f"   - {task['question']} → {task['expected_answer']}")
+        print(f"   - {task['question']}")
     print()

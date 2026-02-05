@@ -31,8 +31,8 @@ from agno.tools.function import Function
 from agno.db.json import JsonDb
 
 from core.config import AgentConfig
-from ..data.dataset import TrainingTask
-from .grader import calculate_reward, extract_answer
+
+from .grader import calculate_reward
 from ..config import TrainingConfig
 
 
@@ -86,11 +86,9 @@ def create_agent_with_prompt(
 if AGENT_LIGHTNING_AVAILABLE:
     @agl.rollout
     def agno_agent_rollout(
-        task: TrainingTask,
+        task: dict,
         prompt_template: agl.PromptTemplate,
-        config: AgentConfig = None,
-        db: JsonDb = None,
-        training_config: TrainingConfig = None
+        **resources
     ) -> float:
         """
         Rollout function for Agent Lightning.
@@ -108,6 +106,11 @@ if AGENT_LIGHTNING_AVAILABLE:
         Returns:
             Reward value (0.0 to 1.0)
         """
+        # Extract resources
+        config = resources.get("config")
+        db = resources.get("db")
+        training_config = resources.get("training_config")
+        
         # Use defaults if not provided
         if config is None:
             config = AgentConfig()
@@ -128,15 +131,13 @@ if AGENT_LIGHTNING_AVAILABLE:
             # Calculate reward
             reward = calculate_reward(
                 agent_response=response.content,
-                expected_answer=task["expected_answer"],
-                tolerance=training_config.reward_tolerance,
+                question=task["question"],
                 use_llm_grader=training_config.use_llm_grader
             )
             
             logger.info(
                 f"Task {task['task_id']}: "
-                f"Expected={task['expected_answer']}, "
-                f"Got={extract_answer(response.content)}, "
+                f"Q='{task['question'][:50]}...', "
                 f"Reward={reward:.2f}"
             )
             
@@ -156,7 +157,7 @@ else:
 def setup_trainer(
     initial_prompt: str,
     algorithm_type: str = "apo",
-    n_runners: int = 8,
+    n_runners: int = 1,
     config: Optional[AgentConfig] = None,
     db: Optional[JsonDb] = None,
     training_config: Optional[TrainingConfig] = None,
@@ -188,40 +189,41 @@ def setup_trainer(
     
     # Choose algorithm
     if algorithm_type == "apo":
-        # Override default invalid models (gpt-5-mini) with valid ones
+        # APO Configuration with tuned hyperparameters
+        # Based on agentlightning documentation best practices
         algo = APO(
             async_openai_client=async_client,
-            gradient_model="gpt-4o-mini",
-            apply_edit_model="gpt-4o-mini"
+            # Model configuration (override defaults which are invalid)
+            gradient_model="gpt-4o-mini",      # For computing textual gradients/critiques
+            apply_edit_model="gpt-4o-mini",    # For applying edits based on critiques
+            
+            # Beam search parameters
+            beam_width=2,                       # Top-k prompts to keep per round
+            branch_factor=1,                    # New candidates per parent prompt
+            beam_rounds=1,                      # Number of optimization rounds
+            
+            # Sampling parameters
+            gradient_batch_size=4,              # Rollouts sampled for gradient computation
+            val_batch_size=8,                  # Validation examples per evaluation
+            
+            # Optimization parameters
+            diversity_temperature=1.0,          # Temperature for diversity in generation
+            rollout_batch_timeout=3600.0,       # Max wait time for rollout completion (seconds)
+            run_initial_validation=True,        # Establish baseline before optimization
         )
-    elif algorithm_type == "sft":
-        # SFT not yet supported, fallback to APO
-        logger.warning(f"SFT not yet implemented, using APO")
-        algo = APO(async_openai_client=async_client)
-    elif algorithm_type == "rl":
-        # RL not yet supported, fallback to APO
-        logger.warning(f"RL not yet implemented, using APO")
-        algo = APO(async_openai_client=async_client)
-    else:
-        logger.warning(f"Unknown algorithm: {algorithm_type}, using APO")
-        algo = APO(async_openai_client=async_client)
-    
-    # Create PromptTemplate resource for APO algorithm
+
     prompt_resource = agl.PromptTemplate(
         template=initial_prompt,
         engine="f-string"
     )
-    
-    # Resources to be injected into rollout
-    resources = {"prompt_template": prompt_resource}
-    if config:
-        resources["config"] = config
-    if db:
-        resources["db"] = db
-    if training_config:
-        resources["training_config"] = training_config
 
-    # Connect to external store if URL provided
+    resources = {
+        "main_prompt": prompt_resource,
+        "config": config,
+        "db": db,
+        "training_config": training_config
+    }
+
     store = None
     if store_url:
         try:
@@ -231,55 +233,12 @@ def setup_trainer(
             logger.warning(f"⚠️ Could not connect to external store: {e}")
             store = None
 
-    # Implement a hook to save EVERY prompt version as it's being tested
-    class PromptLoggingHook(agl.Hook):
-        """Hook to save every candidate prompt used in rollouts to JSON in real-time."""
-        
-        def __init__(self):
-            super().__init__()
-            from ..utils.prompt_manager import PromptManager
-            self.pm = PromptManager()
-            self._saved_hashes = set()
-
-        async def on_rollout_start(self, *, agent, runner, rollout):
-            """Called before each rollout attempt."""
-            try:
-                # Extract prompt template from resources for this rollout
-                store = runner.store
-                if rollout.resources_id:
-                    res = await store.get_resources(rollout.resources_id)
-                    if res and 'prompt_template' in res:
-                        prompt_text = str(res['prompt_template'])
-                        
-                        # Only save if we haven't saved this exact text recently 
-                        # to avoid spamming the JSON during the 16 tasks per prompt batch
-                        prompt_hash = hash(prompt_text)
-                        if prompt_hash not in self._saved_hashes:
-                            self.pm.save_prompt(
-                                prompt_text=prompt_text,
-                                training_reward=0.0, # Dummy, will be updated by best_prompt
-                                iteration=0,
-                                metadata={
-                                    "rollout_id": rollout.rollout_id,
-                                    "resource_id": rollout.resources_id,
-                                    "mode": rollout.mode,
-                                    "status": "candidate"
-                                },
-                                set_active=False
-                            )
-                            self._saved_hashes.add(prompt_hash)
-            except Exception as e:
-                # Hooks should never crash training
-                logger.debug(f"PromptLoggingHook error: {e}")
-
-    # Create trainer
     trainer = Trainer(
         algorithm=algo,
         n_runners=n_runners,
         initial_resources=resources,
         adapter=TraceToMessages(),
         store=store,  # Use external store if available
-        hooks=[PromptLoggingHook()]
     )
     
     logger.info(f"✅ Trainer created with {algorithm_type} algorithm")
@@ -287,14 +246,6 @@ def setup_trainer(
 
 
 def get_initial_prompt() -> str:
-    """
-    Get default initial prompt template.
-    
-    Returns:
-        Initial prompt string
-    """
-    return """You are a helpful math assistant.
-Solve math problems step by step.
-When given a calculation task, use the available tools.
-Always show your work and provide the final answer clearly.
-Be accurate and precise in your calculations."""
+
+    from core.prompts import INITIAL_TRAINING_PROMPT
+    return INITIAL_TRAINING_PROMPT

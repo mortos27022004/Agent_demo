@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 def initialize_training(
     iterations: int,
     algorithm: str,
+    n_runners: int = None,
     real_data_db: str = None
 ) -> Tuple[AgentConfig, TrainingConfig, JsonDb]:
     """
@@ -25,6 +26,7 @@ def initialize_training(
     Args:
         iterations: Number of training iterations
         algorithm: Training algorithm
+        n_runners: Optional number of workers
         real_data_db: Optional path to real data database
         
     Returns:
@@ -39,14 +41,21 @@ def initialize_training(
     
     # 2. Config setup
     agent_config = AgentConfig()
-    training_config = TrainingConfig(
-        max_iterations=iterations,
-        algorithm=algorithm
-    )
+    
+    # Use default from TrainingConfig if n_runners is None
+    config_params = {
+        "max_iterations": iterations,
+        "algorithm": algorithm
+    }
+    if n_runners is not None:
+        config_params["n_runners"] = n_runners
+        
+    training_config = TrainingConfig(**config_params)
+    
     if real_data_db:
         training_config.user_data_db_path = real_data_db
         
-    print(f"📊 Configuration: {training_config.algorithm.upper()}, {training_config.max_iterations} iterations")
+    print(f"📊 Configuration: {training_config.algorithm.upper()}, {training_config.max_iterations} iterations, {training_config.n_runners} workers")
     
     # 3. Infrastructure setup
     db = setup_infrastructure(training_config)

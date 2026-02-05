@@ -1,39 +1,33 @@
 #!/usr/bin/env python
-"""Trainer factory module for creating and configuring trainers."""
+"""Training executor module for running training loops."""
 
 import logging
 import sys
-from typing import Optional
+from typing import List, Tuple
 
 from agno.db.json import JsonDb
 from core.config import AgentConfig
 from ..config import TrainingConfig
-from .rollout import setup_trainer, get_initial_prompt
+from .rollout import agno_agent_rollout, setup_trainer, get_initial_prompt
 
 logger = logging.getLogger(__name__)
 
 
-def create_trainer(
+def run_training(
     training_config: TrainingConfig,
     agent_config: AgentConfig,
     db: JsonDb,
-    store_url: Optional[str] = None
-) -> object:
+    train_dataset: List[dict],
+    val_dataset: List[dict],
+    store_url: str = None
+) -> Tuple[object, str]:
     """
-    Create and configure Agent Lightning trainer.
+    Run the complete training cycle: creation + execution.
     
-    Args:
-        training_config: Training configuration
-        agent_config: Agent configuration
-        db: Database instance
-        store_url: Optional external store URL for debugging
-        
     Returns:
-        Configured Trainer instance
-        
-    Raises:
-        SystemExit: If trainer creation fails
+        Tuple of (trainer, initial_prompt)
     """
+    # 1. Create trainer
     initial_prompt = get_initial_prompt()
     
     print(f"🎓 Setting up {training_config.algorithm.upper()} trainer...")
@@ -51,7 +45,24 @@ def create_trainer(
     if not trainer:
         logger.error("❌ Failed to create trainer")
         sys.exit(1)
-    
+        
     print(f"✅ Trainer ready ({training_config.n_runners} workers)\n")
+    
+    # 2. Execute training loop
+    print("🔥 Starting training loop...")
+    
+    try:
+        trainer.fit(
+            agent=agno_agent_rollout,
+            train_dataset=train_dataset,
+            val_dataset=val_dataset
+        )
+        
+        print("\n" + "=" * 60)
+        print("✅ Training complete!")
+        
+    except Exception as e:
+        logger.error(f"❌ Training failed: {e}", exc_info=True)
+        sys.exit(1)
     
     return trainer, initial_prompt

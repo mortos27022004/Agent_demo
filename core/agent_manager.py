@@ -151,13 +151,9 @@ class AgnoAgentManager:
                     raise
         
         # Default instructions
+        from .prompts import DEFAULT_AGENT_INSTRUCTIONS
         logger.info("Using default instructions")
-        return [
-            "Bạn là một trợ lý AI thông minh và hữu ích.",
-            "Khi cần tính toán, hãy SỬ DỤNG TOOL thay vì tự tính.",
-            "Luôn giải thích rõ ràng cách bạn sử dụng tool.",
-            "Trả lời bằng tiếng Việt trừ khi được yêu cầu khác."
-        ]
+        return DEFAULT_AGENT_INSTRUCTIONS
     
     def initialize(self) -> None:
         """

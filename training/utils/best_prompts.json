@@ -83,11 +83,161 @@
       "training_reward": 0.0,
       "iteration": 1,
       "algorithm": "apo",
-      "is_active": true,
+      "is_active": false,
       "metadata": {
         "train_size": "N/A",
         "val_size": "N/A",
         "n_runners": 8,
+        "task_type": "conversation"
+      }
+    },
+    {
+      "id": "23e9f672-a251-4093-8edf-5748002db919",
+      "prompt_text": "resource_type='prompt_template' template='You are a helpful math assistant.\\nSolve math problems step by step.\\nWhen given a calculation task, use the available tools.\\nAlways show your work and provide the final answer clearly.\\nBe accurate and precise in your calculations.' engine='f-string'",
+      "timestamp": "2026-02-05T13:26:50.238548",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {
+        "train_size": "N/A",
+        "val_size": "N/A",
+        "n_runners": 8,
+        "task_type": "conversation"
+      }
+    },
+    {
+      "id": "3aec83c5-9ad9-4b3d-98bc-1deebe1ddf23",
+      "prompt_text": "resource_type='prompt_template' template='You are a helpful math assistant.\\nSolve math problems step by step.\\nWhen given a calculation task, use the available tools.\\nAlways show your work and provide the final answer clearly.\\nBe accurate and precise in your calculations.' engine='f-string'",
+      "timestamp": "2026-02-05T13:28:26.670804",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {
+        "train_size": "N/A",
+        "val_size": "N/A",
+        "n_runners": 8,
+        "task_type": "conversation"
+      }
+    },
+    {
+      "id": "80e36a29-ab5f-40c7-8e5f-cd74a87632ee",
+      "prompt_text": "resource_type='prompt_template' template='You are a helpful math assistant.\\nSolve math problems step by step.\\nWhen given a calculation task, use the available tools.\\nAlways show your work and provide the final answer clearly.\\nBe accurate and precise in your calculations.' engine='f-string'",
+      "timestamp": "2026-02-05T13:33:21.360062",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {
+        "train_size": "N/A",
+        "val_size": "N/A",
+        "n_runners": 8,
+        "task_type": "conversation"
+      }
+    },
+    {
+      "id": "706f0c52-53ad-4150-9108-2fd1afca489e",
+      "prompt_text": "resource_type='prompt_template' template='You are a helpful math assistant.\\nSolve math problems step by step.\\nWhen given a calculation task, use the available tools.\\nAlways show your work and provide the final answer clearly.\\nBe accurate and precise in your calculations.' engine='f-string'",
+      "timestamp": "2026-02-05T13:53:40.502942",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {
+        "train_size": "N/A",
+        "val_size": "N/A",
+        "n_runners": 8,
+        "task_type": "conversation"
+      }
+    },
+    {
+      "id": "9beeece0-0eb8-42e8-bc48-8c28c458d1d4",
+      "prompt_text": "resource_type='prompt_template' template='You are a helpful math assistant.\\nSolve math problems step by step.\\nWhen given a calculation task, use the available tools.\\nAlways show your work and provide the final answer clearly.\\nBe accurate and precise in your calculations.' engine='f-string'",
+      "timestamp": "2026-02-05T15:00:06.366545",
+      "training_reward": -Infinity,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {
+        "train_size": "N/A",
+        "val_size": "N/A",
+        "n_runners": 1,
+        "task_type": "conversation"
+      }
+    },
+    {
+      "id": "582f80b6-05f6-4048-9fbb-bd45869d2cc2",
+      "prompt_text": "resource_type='prompt_template' template='You are a helpful math assistant.\\nSolve math problems step by step.\\nWhen given a calculation task, use the available tools.\\nAlways show your work and provide the final answer clearly.\\nBe accurate and precise in your calculations.' engine='f-string'",
+      "timestamp": "2026-02-05T15:06:39.311737",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {
+        "train_size": "N/A",
+        "val_size": "N/A",
+        "n_runners": 1,
+        "task_type": "conversation"
+      }
+    },
+    {
+      "id": "01a81eec-43b2-4200-aa8d-3003871fc912",
+      "prompt_text": "resource_type='prompt_template' template='You are a helpful math assistant.\\nSolve math problems step by step.\\nWhen given a calculation task, use the available tools.\\nAlways show your work and provide the final answer clearly.\\nBe accurate and precise in your calculations.' engine='f-string'",
+      "timestamp": "2026-02-05T15:52:04.180665",
+      "training_reward": 1.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {
+        "train_size": "N/A",
+        "val_size": "N/A",
+        "n_runners": 1,
+        "task_type": "conversation"
+      }
+    },
+    {
+      "id": "e60a2c70-9c6c-4770-ab39-e41dacbbbb24",
+      "prompt_text": "resource_type='prompt_template' template='You are a helpful math assistant.\\nSolve math problems step by step.\\nWhen given a calculation task, use the available tools.\\nAlways show your work and provide the final answer clearly.\\nBe accurate and precise in your calculations.' engine='f-string'",
+      "timestamp": "2026-02-05T15:54:34.008981",
+      "training_reward": 1.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {
+        "train_size": "N/A",
+        "val_size": "N/A",
+        "n_runners": 1,
+        "task_type": "conversation"
+      }
+    },
+    {
+      "id": "4e8891fa-7b34-460b-98cf-a16c8fc00530",
+      "prompt_text": "resource_type='prompt_template' template='You are a helpful math assistant.\\nSolve math problems step by step.\\nWhen given a calculation task, use the available tools.\\nAlways show your work and provide the final answer clearly.\\nBe accurate and precise in your calculations.' engine='f-string'",
+      "timestamp": "2026-02-05T15:59:41.800629",
+      "training_reward": 1.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {
+        "train_size": "N/A",
+        "val_size": "N/A",
+        "n_runners": 1,
+        "task_type": "conversation"
+      }
+    },
+    {
+      "id": "bed19aff-7fd7-4eb3-b2b8-ba93292405f9",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-05T16:06:56.209050",
+      "training_reward": 1.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": true,
+      "metadata": {
+        "train_size": "N/A",
+        "val_size": "N/A",
+        "n_runners": 1,
         "task_type": "conversation"
       }
     }

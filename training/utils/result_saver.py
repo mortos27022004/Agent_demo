@@ -52,39 +52,45 @@ def save_training_results(
 
 
 def extract_best_prompt(trainer, initial_prompt: str) -> Tuple[str, float]:
-    """
-    Extract best prompt from trainer.
-    
-    Args:
-        trainer: Agent Lightning trainer instance
-        initial_prompt: Initial prompt as fallback
-        
-    Returns:
-        Tuple of (best_prompt, best_reward)
-    """
+
     best_prompt = initial_prompt
     best_reward = 0.0
     
     if not hasattr(trainer, 'algorithm') or trainer.algorithm is None:
+        logger.warning("⚠️ No algorithm found in trainer")
         return best_prompt, best_reward
 
-    # Try 1: Call get_best_prompt() which many algorithms (like APO) implement
+    # Use APO's native get_best_prompt() method (recommended approach)
     if hasattr(trainer.algorithm, 'get_best_prompt'):
         try:
-            best_prompt = str(trainer.algorithm.get_best_prompt())
-            # For APO, the best score is in _history_best_score
+            best_prompt_obj = trainer.algorithm.get_best_prompt()
+            best_prompt = str(best_prompt_obj)
+            
+            # Extract best score from APO's internal tracking
             if hasattr(trainer.algorithm, '_history_best_score'):
                 best_reward = trainer.algorithm._history_best_score
-            print("✅ Extracted best prompt via get_best_prompt()")
+                logger.info(f"✅ Extracted best prompt (reward: {best_reward:.2f})")
+            else:
+                logger.info("✅ Extracted best prompt (no score available)")
+                
             return best_prompt, best_reward
-        except Exception:
-            pass
+            
+        except ValueError as e:
+            # APO raises ValueError if run() not called or no best prompt found
+            logger.warning(f"⚠️ Could not get best prompt from APO: {e}")
+        except Exception as e:
+            logger.error(f"❌ Error extracting best prompt: {e}")
 
-    # Try 2: Legacy fallback to best_resources
+    # Fallback: try getting from best_resources (legacy)
     if hasattr(trainer.algorithm, 'best_resources'):
         resources = trainer.algorithm.best_resources
-        if resources and 'prompt_template' in resources:
+        if resources and 'main_prompt' in resources:
+            best_prompt = str(resources['main_prompt'])
+            logger.info("✅ Extracted prompt from best_resources (legacy)")
+        # Also try old key for backwards compatibility during migration
+        elif resources and 'prompt_template' in resources:
             best_prompt = str(resources['prompt_template'])
-            print("✅ Extracted optimized prompt from best_resources")
+            logger.warning("⚠️ Using legacy 'prompt_template' key (consider updating)")
     
     return best_prompt, best_reward
+

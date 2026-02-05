@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 from .setup import initialize_training
 from .data.data_preparation import prepare_datasets
-from .engine.training_executor import run_training
+from .engine.executor import run_training
 from .utils.result_saver import save_training_results
 
 # Create logs directory
@@ -36,6 +36,7 @@ DEFAULT_DB_PATH = str(Path(__file__).parent.parent / "core" / "agno_memory.db")
 def main(
     iterations: int = 1,
     algorithm: str = "apo",
+    workers: int = None,
     store_url: str = None,
     dry_run: bool = False,
     real_data_db: str = DEFAULT_DB_PATH
@@ -56,6 +57,7 @@ def main(
     agent_config, training_config, db = initialize_training(
         iterations=iterations,
         algorithm=algorithm,
+        n_runners=workers,
         real_data_db=real_data_db
     )
     
@@ -65,7 +67,7 @@ def main(
     if dry_run:
         print("🧪 DRY RUN MODE - Setup complete!")
         return
-    print (train_dataset)
+    
     if store_url:
         # If using external store (dashboard), tell agentlightning NOT to start
         # its own internal server wrapper for subprocesses. This avoids binding
@@ -92,10 +94,13 @@ def main(
 if __name__ == "__main__":
     import argparse
     
+    # Run with: python -m training.train --iterations 1 --algorithm apo --real-data-db path/to/db
+    # Check dashboard: agl store --port 4747
     parser = argparse.ArgumentParser(description="Agno Agent Training Pipeline")
     parser.add_argument("--iterations", type=int, default=1, help="Number of training iterations")
     parser.add_argument("--algorithm", type=str, default="apo", help="Training algorithm (apo, sft, rl)")
-    parser.add_argument("--store-url", type=str, help="Optional external store URL")
+    parser.add_argument("--workers", type=int, default=1, help="Number of parallel workers (runners)")
+    parser.add_argument("--store-url", type=str, default="http://localhost:4747", help="Optional external store URL")
     parser.add_argument("--dry-run", action="store_true", help="Only setup and prepare data without training")
     parser.add_argument("--real-data-db", type=str, default=DEFAULT_DB_PATH, help="Path to real data database")
     
@@ -104,6 +109,7 @@ if __name__ == "__main__":
     main(
         iterations=args.iterations,
         algorithm=args.algorithm,
+        workers=args.workers,
         store_url=args.store_url,
         dry_run=args.dry_run,
         real_data_db=args.real_data_db
