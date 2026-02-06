@@ -14,7 +14,6 @@ def setup_infrastructure(training_config: TrainingConfig) -> JsonDb:
     
     Args:
         training_config: Training configuration
-        
     Returns:
         JsonDb instance
     """
