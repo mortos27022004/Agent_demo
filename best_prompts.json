@@ -1,0 +1,305 @@
+{
+  "version": "1.0",
+  "prompts": [
+    {
+      "id": "3e50b54e-0534-4aee-82f4-c8c13833d418",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T11:03:08.026903",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "d52fc1b1-0433-4f27-9c56-766bbb2a1a31",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T11:23:13.897568",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "f5dd7787-4f3b-4c1a-9cc7-9feaa66f8a4e",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T11:31:12.775211",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "db3c9467-41da-4bb9-9535-5bff9702a9a9",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T11:47:15.895313",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "71c6988c-9b91-4f29-8d9a-e9dbe4b15eec",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T13:12:44.282455",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "5ed675a7-9215-40ac-8716-cc9c5cc4132e",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T13:16:14.779940",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "8b784647-dde9-4722-926c-e93ec7fca21e",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T13:32:41.380782",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "3012ce16-b03d-4b3e-986e-2e353258f320",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T13:34:26.909898",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "08bb5382-c387-4f84-9800-2a8e5bf09fc5",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T13:36:15.072539",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "e06d1998-73a7-456b-a01c-0b280c42bb79",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T13:55:44.935794",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "fb394870-271f-4d04-b2db-d5e33a67058a",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T14:24:59.321720",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "f0659e38-d982-4a79-baf5-af2f0665be77",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T14:28:37.009931",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "8226b887-52dc-472b-baa7-16e06e6d2351",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T14:51:06.705012",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "3ad32dec-fc93-4e24-b48d-61c6c7664a52",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T14:57:41.222773",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "3a280e4b-f308-4a91-b804-254c62cffdfd",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T15:00:14.726271",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "7b409c1d-f254-4bcf-92bc-081600227452",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T15:02:24.160860",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "1312e0d9-d706-4abc-abff-c2cf861b1149",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T15:03:26.964719",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "7b6b3348-6ca9-432c-a720-814a2e6bf1d1",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T15:11:54.319693",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "e1a18a75-a187-4d52-b98f-7adf995344fc",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T15:14:57.812792",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "0d851b36-3403-4e95-8c23-2bd93cbf7899",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T15:31:42.275254",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "aff1c3bc-24fd-4a99-84c5-c93707dd03bf",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T15:36:22.791036",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "f2615807-e06f-4b39-b2ce-2658e6a00d34",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T15:39:31.113977",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "fd74512a-40fa-440b-b53f-3e3e9cc0f991",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T15:44:32.133818",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "b54a78c9-c543-4dd8-9734-f2f708970690",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T15:45:37.705340",
+      "training_reward": 0.5,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "6fbd7d81-93cb-4e09-b1c4-fbcea7441899",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T16:02:16.548860",
+      "training_reward": 0.5,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "a1542a06-1b02-450b-828f-628944900bf6",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T16:06:09.880752",
+      "training_reward": 0.5,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "1cba786e-64c3-43a1-8b27-933892e7b717",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T16:16:53.891880",
+      "training_reward": 1.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "daea6d8e-2475-49f5-9f8a-092fcaeab194",
+      "prompt_text": "resource_type='prompt_template' template=\"As an AI assistant, you are to solve math problems given by the user.\\n\\nTo perform this task, use the following tools if relevant to the user's problem:\\n*   `sum_1_to_n`: to calculate the sum of integers from 1 to n.\\n*   `calculator`: for arithmetic calculations.\\n*   `get_area_of_circle`: to calculate the area of a circle.\\n*   `get_area_of_rectangle`: to calculate the area of a rectangle.\\n\\nSolve the user's problem step by step. Begin by restating the user's problem to confirm your understanding. If the user's problem is ambiguous, clarify the ambiguity by asking the user a clarifying question. Then, show your steps to solve it using the available tools, and give the final answer in the end.\\n\" engine='f-string'",
+      "timestamp": "2026-02-09T16:25:05.774158",
+      "training_reward": 0.5,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "f14607e1-4931-4dec-9f21-8e2953c218a3",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T16:36:50.472720",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {}
+    },
+    {
+      "id": "4e44be35-5a0d-4454-b1bb-6892e3b88c6d",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T16:42:31.376725",
+      "training_reward": 1.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": true,
+      "metadata": {}
+    }
+  ]
+}

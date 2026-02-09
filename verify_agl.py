@@ -1,15 +1,17 @@
+from openai import OpenAI
+import os
+from dotenv import load_dotenv
+load_dotenv()
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY_opr"),  # Use OpenRouter API key
+    base_url=os.getenv("OPENAI_API_BASE_URL")
+)
 
-try:
-    import agentlightning as agl
-    print("AgentLightning imported")
-    
-    p = agl.PromptTemplate(template="test prompt", engine="f-string")
-    print(f"str(p): {str(p)}")
-    print(f"hasattr(p, 'template'): {hasattr(p, 'template')}")
-    if hasattr(p, 'template'):
-        print(f"p.template: {p.template}")
-        
-except ImportError:
-    print("AgentLightning not found")
-except Exception as e:
-    print(f"Error: {e}")
+resp = client.chat.completions.create(
+    model="openai/gpt-4o-mini",
+    messages=[
+        {"role": "user", "content": "Xin chào"}
+    ]
+)
+
+print(resp.choices[0].message.content)

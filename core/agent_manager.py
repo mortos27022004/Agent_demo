@@ -13,7 +13,7 @@ from typing import List, Optional
 
 from agno.agent import Agent
 from agno.db.json import JsonDb
-from agno.models.openai import OpenAIChat
+from agno.models.google import Gemini
 from agno.tools.function import Function
 from agno.tracing import setup_tracing
 
@@ -62,7 +62,7 @@ class AgnoAgentManager:
         setup_tracing(db=self.db)
         logger.info("OpenTelemetry tracing enabled")
     
-    def create_agent(self) -> Agent:
+    def create_agent(self, custom_instructions: Optional[List[str]] = None) -> Agent:
         """
         Tạo Agno Agent với cấu hình đã thiết lập.
         
@@ -73,21 +73,21 @@ class AgnoAgentManager:
             ValueError: Nếu API key không được cung cấp
             RuntimeError: Nếu database chưa được khởi tạo
         """
-        if not self.config.openai_api_key:
-            raise ValueError("OPENAI_API_KEY not found in environment variables")
+        if not self.config.google_api_key:
+            raise ValueError("GOOGLE_API_KEY not found in configuration")
         
         if self.db is None:
             raise RuntimeError("Database must be initialized before creating agent")
         
         logger.info(f"Creating agent with model: {self.config.model_id}")
         
-        # Get instructions (from best prompt or default)
-        instructions = self._get_instructions()
+        # Get instructions (custom, from best prompt or default)
+        instructions = custom_instructions or self._get_instructions()
         
         self.agent = Agent(
-            model=OpenAIChat(
+            model=Gemini(
                 id=self.config.model_id,
-                api_key=self.config.openai_api_key
+                api_key=self.config.google_api_key
             ),
             tools=[
                 Function.from_callable(sum_1_to_n),
@@ -155,7 +155,7 @@ class AgnoAgentManager:
         logger.info("Using default instructions")
         return DEFAULT_AGENT_INSTRUCTIONS
     
-    def initialize(self) -> None:
+    def initialize(self, custom_instructions: Optional[List[str]] = None) -> None:
         """
         Khởi tạo đầy đủ: database, tracing, và agent.
         
@@ -163,10 +163,13 @@ class AgnoAgentManager:
         1. Setup database
         2. Enable tracing
         3. Tạo agent
+        
+        Args:
+            custom_instructions: Tùy ý cung cấp danh sách chỉ dẫn cho agent.
         """
         self.setup_database()
         self.setup_tracing()
-        self.create_agent()
+        self.create_agent(custom_instructions=custom_instructions)
         logger.info("Agent initialization complete")
     
     def create_agent_with_prompt(self, prompt_template: str) -> Agent:
@@ -182,8 +185,8 @@ class AgnoAgentManager:
         Returns:
             Agent instance với prompt mới
         """
-        if not self.config.openai_api_key:
-            raise ValueError("OPENAI_API_KEY not found in environment variables")
+        if not self.config.google_api_key:
+            raise ValueError("GOOGLE_API_KEY not found in configuration")
         
         if self.db is None:
             raise RuntimeError("Database must be initialized before creating agent")
@@ -198,9 +201,9 @@ class AgnoAgentManager:
         logger.info(f"Creating agent with custom prompt ({len(instructions)} instructions)")
         
         self.agent = Agent(
-            model=OpenAIChat(
+            model=Gemini(
                 id=self.config.model_id,
-                api_key=self.config.openai_api_key
+                api_key=self.config.google_api_key
             ),
             tools=[
                 Function.from_callable(sum_1_to_n),

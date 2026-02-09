@@ -233,6 +233,36 @@
       "training_reward": 1.0,
       "iteration": 1,
       "algorithm": "apo",
+      "is_active": false,
+      "metadata": {
+        "train_size": "N/A",
+        "val_size": "N/A",
+        "n_runners": 1,
+        "task_type": "conversation"
+      }
+    },
+    {
+      "id": "252940d4-dfaa-4a59-ba69-27850fa04f6b",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T10:12:48.743207",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
+      "is_active": false,
+      "metadata": {
+        "train_size": "N/A",
+        "val_size": "N/A",
+        "n_runners": 1,
+        "task_type": "conversation"
+      }
+    },
+    {
+      "id": "1835a33f-e2aa-4684-a249-67b7cf08cf1f",
+      "prompt_text": "resource_type='prompt_template' template='B\u1ea1n l\u00e0 m\u1ed9t tr\u1ee3 l\u00fd AI gi\u00fap t\u00f4i gi\u1ea3i quy\u1ebft th\u1eafc m\u1eafc' engine='f-string'",
+      "timestamp": "2026-02-09T10:26:59.350785",
+      "training_reward": 0.0,
+      "iteration": 1,
+      "algorithm": "apo",
       "is_active": true,
       "metadata": {
         "train_size": "N/A",

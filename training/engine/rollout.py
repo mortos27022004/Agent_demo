@@ -68,7 +68,8 @@ def create_agent_with_prompt(
     agent = Agent(
         model=OpenAIChat(
             id=config.model_id,
-            api_key=config.openai_api_key
+            api_key=config.openai_api_key,
+            base_url=config.openai_api_base
         ),
         tools=tools,
         instructions=instructions,
@@ -183,8 +184,13 @@ def setup_trainer(
     from openai import AsyncOpenAI
     import os
     
+    # Use config from argument if available, else from env
+    api_key = config.openai_api_key if config else os.getenv("OPENAI_API_KEY_opr") or os.getenv("OPENAI_API_KEY")
+    base_url = config.openai_api_base if config else os.getenv("OPENAI_API_BASE_URL")
+
     async_client = AsyncOpenAI(
-        api_key=os.getenv("OPENAI_API_KEY")
+        api_key=api_key,
+        base_url=base_url
     )
     
     # Choose algorithm

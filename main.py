@@ -44,7 +44,7 @@ def main() -> None:
         
         # Danh sách câu hỏi demo
         questions = [
-            "Xin chào bạn có thể làm được gì",
+            "diện tích hình chữ nhật có chiều dài 5 và chiều rộng 3",
         ]
         
         # Chạy câu hỏi

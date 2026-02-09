@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import streamlit as st
 import logging
+import importlib
 from dotenv import load_dotenv
 from datetime import datetime
 import time
@@ -92,19 +93,25 @@ def initialize_session_state():
     if 'debug_mode' not in st.session_state:
         st.session_state.debug_mode = False
 
+    if 'agent_instructions' not in st.session_state:
+        # Import default instructions if not in session state
+        from core.prompts import DEFAULT_AGENT_INSTRUCTIONS
+        st.session_state.agent_instructions = "\n".join(DEFAULT_AGENT_INSTRUCTIONS)
+
 
 
 
 # ========================================
 # Agent Initialization
 # ========================================
-def initialize_agent(session_id: str, debug_mode: bool = False):
+def initialize_agent(session_id: str, debug_mode: bool = False, custom_instructions: str = None):
     """
     Khởi tạo agent với cấu hình.
     
     Args:
         session_id: Session ID
         debug_mode: Enable debug mode
+        custom_instructions: Custom instructions for the agent
     """
     try:
         # Load environment variables
@@ -115,9 +122,22 @@ def initialize_agent(session_id: str, debug_mode: bool = False):
         config.session_id = session_id
         config.debug_mode = debug_mode
         
+        # Parse instructions from string to list if provided
+        instructions_list = None
+        if custom_instructions:
+            instructions_list = [line.strip() for line in custom_instructions.split('\n') if line.strip()]
+        
         # Create and initialize agent manager
+        import core.agent_manager
+        import core.config
+        importlib.reload(core.config)
+        importlib.reload(core.agent_manager)
+        
+        from core.agent_manager import AgnoAgentManager
+        from core.config import AgentConfig
+        
         manager = AgnoAgentManager(config)
-        manager.initialize()
+        manager.initialize(custom_instructions=instructions_list)
         
         st.session_state.agent_manager = manager
         st.session_state.config = config
@@ -166,12 +186,21 @@ def render_sidebar():
                 help="Hiển thị thông tin debug chi tiết"
             )
             
+            # Agent Instructions
+            agent_instructions = st.text_area(
+                "Agent Instructions",
+                value=st.session_state.agent_instructions,
+                help="Các chỉ dẫn cho agent (mỗi dòng một chỉ dẫn)",
+                height=150
+            )
+            
             # Initialize/Reinitialize button
             if st.button("🔄 Khởi tạo Agent", type="primary", use_container_width=True):
                 with st.spinner("Đang khởi tạo agent..."):
-                    if initialize_agent(session_id, debug_mode):
+                    if initialize_agent(session_id, debug_mode, agent_instructions):
                         st.session_state.current_session_id = session_id
                         st.session_state.debug_mode = debug_mode
+                        st.session_state.agent_instructions = agent_instructions
                         st.success("✅ Agent đã sẵn sàng!")
                         st.rerun()
         
@@ -371,7 +400,7 @@ def render_sidebar():
         # Footer
         st.markdown("---")
         st.caption("Powered by Agno AI Framework")
-        st.caption("Model: GPT-4o-mini")
+        st.caption("Model: Gemini 2.0 Flash")
 
 
 # ========================================
