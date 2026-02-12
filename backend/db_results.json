@@ -1,0 +1,33 @@
+{
+  "product": {
+    "id": "0a255ed8-734b-420c-ae72-08610008de39",
+    "category_id": "c5f14404-b781-414b-8b2e-eae58fb59d1a",
+    "name": "iPhone 17 Pro",
+    "slug": "iphone-17-pro",
+    "description": null,
+    "created_at": "2026-02-11T06:45:48.677Z",
+    "updated_at": "2026-02-11T07:44:47.134Z",
+    "sku": "ip17",
+    "brand_id": null,
+    "specs": {},
+    "is_published": true
+  },
+  "variants": [],
+  "variantCount": 0,
+  "attributeImages": [
+    {
+      "id": "218f0c1f-15eb-4ee0-81ba-5ebb6ef78782",
+      "product_id": "0a255ed8-734b-420c-ae72-08610008de39",
+      "attribute_combo": {
+        "Màu sắc": "Cam vũ trụ"
+      },
+      "image_urls": [
+        "blob:http://localhost:5173/4007c0d2-b06b-43c6-af66-3cdfc1d9a1be",
+        "blob:http://localhost:5173/50eed8a3-562c-434b-b8cf-54cca517387b",
+        "blob:http://localhost:5173/54d260a6-e517-4188-a880-231a3e3bb34b"
+      ],
+      "created_at": "2026-02-11T07:44:47.134Z"
+    }
+  ],
+  "attributeImageCount": 1
+}

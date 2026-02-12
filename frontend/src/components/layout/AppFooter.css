@@ -1,0 +1,10 @@
+.app-footer {
+    padding: 20px;
+    text-align: center;
+    margin-top: auto;
+}
+
+.footer-container {
+    max-width: 1600px;
+    margin: 0 auto;
+}

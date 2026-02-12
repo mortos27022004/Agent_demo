@@ -1,0 +1,9 @@
+{
+    "fullName": "Verify User",
+    "email": "verify3@example.com",
+    "password": "password123",
+    "phone": "0123456789",
+    "gender": "male",
+    "dob": "1995-05-15",
+    "address": "456 Verification Ave"
+}
